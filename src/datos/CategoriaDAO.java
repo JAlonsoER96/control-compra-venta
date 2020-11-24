@@ -30,13 +30,13 @@ public class CategoriaDAO implements Crud<Categoria> {
     //Métodos CRUD
     @Override
     public List<Categoria> list(String texto) {
-        List<Categoria> registros = new ArrayList<Categoria>();
+        List<Categoria> registros = new ArrayList<>();
         try {
             ps = CON.conectar().prepareStatement("select * from categoria where nombre like ?");
             ps.setString(1, "%" + texto + "%");
             rs = ps.executeQuery();
             while (rs.next()) {
-                registros.add(new Categoria(rs.getInt(0), rs.getString(1), rs.getString(2), rs.getBoolean(3)));
+                registros.add(new Categoria(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4)));
             }
             ps.close();
             rs.close();
@@ -135,7 +135,9 @@ public class CategoriaDAO implements Crud<Categoria> {
         try {
             ps = CON.conectar().prepareStatement("select count(id) as total from categoria");
             rs = ps.executeQuery();
-            totales = rs.getInt("total");
+            while(rs.next()){
+                totales=rs.getInt("total");
+            }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         } finally {

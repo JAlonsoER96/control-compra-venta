@@ -19,7 +19,7 @@ import entidades.Categoria;
 public class ContolCategoria {
 
     private final CategoriaDAO DATOS;
-    private Categoria cat;
+    private final Categoria cat;
     private DefaultTableModel model;
     private int totalMostrados;
 
@@ -28,13 +28,14 @@ public class ContolCategoria {
         super();
         this.DATOS = new CategoriaDAO();
         this.cat = new Categoria();
+        this.totalMostrados=0;
     }
-
+//Control categoria
     public DefaultTableModel listar(String texto) {
         List<Categoria> lista = new ArrayList();
         lista.addAll(DATOS.list(texto));
         //Encabezados de tabla
-        String[] titulos = {"Id", "Nombre", "Descripción, Estado"};
+        String[] titulos = {"Id", "Nombre", "Descripción", "Estado"};
         //Instanción modelo tabla
         this.model = new DefaultTableModel(null, titulos);
         String estado;
