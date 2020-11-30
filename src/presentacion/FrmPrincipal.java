@@ -179,7 +179,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
         }// </editor-fold>//GEN-END:initComponents
 
     private void mnuItemArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemArticuloActionPerformed
-        // TODO add your handling code here:
+        FrmArticulo frma = new FrmArticulo();
+        principal.add(frma);
+        frma.setVisible(true);
     }//GEN-LAST:event_mnuItemArticuloActionPerformed
 
     private void mnuItemProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemProveedorActionPerformed

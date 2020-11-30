@@ -15,6 +15,11 @@ public class Categoria {
 //Constructor vacio
     public Categoria() {
     }
+//Constructor para select 
+    public Categoria(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
 
 //Constructor con parámetros
     public Categoria(int id, String nombre, String descripcion, boolean activo) {
@@ -60,7 +65,6 @@ public class Categoria {
 
     @Override
     public String toString() {
-        return "Categoria [idcategoria=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", activo="
-                + activo + "]";
+        return nombre;
     }
 }

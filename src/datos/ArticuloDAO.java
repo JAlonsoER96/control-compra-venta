@@ -8,10 +8,10 @@ import javax.swing.JOptionPane;
 import java.sql.*;
 
 import database.Conexion;
-import entidades.Categoria;
-import datos.interfaces.Crud;
+import datos.interfaces.CrudPaginado;
+import entidades.Articulo;
 
-public class CategoriaDAO implements Crud<Categoria> {
+public class ArticuloDAO implements CrudPaginado<Articulo> {
     //Variable de conexión
 
     private final Conexion CON;
@@ -23,20 +23,23 @@ public class CategoriaDAO implements Crud<Categoria> {
     private boolean resp;
 
     //Constructor
-    public CategoriaDAO() {
+    public ArticuloDAO() {
         CON = Conexion.getInstancia();
     }
 
     //Métodos CRUD
     @Override
-    public List<Categoria> list(String texto) {
-        List<Categoria> registros = new ArrayList<>();
+    public List<Articulo> list(String texto, int totalPerPagina,int numPagina) {
+        List<Articulo> registros = new ArrayList<>();
         try {
-            ps = CON.conectar().prepareStatement("select * from categoria where nombre like ?");
+            ps = CON.conectar().prepareStatement("select a.*, c.nombre as categoria from articulo as a inner join categoria as c on a.categoria_id = c.id "+
+                    "where a.nombre LIKE ? order by a.idarticulo asc limit ? , ?");
             ps.setString(1, "%" + texto + "%");
+            ps.setInt(2, (numPagina-1)*totalPerPagina);
+            ps.setInt(3, totalPerPagina);
             rs = ps.executeQuery();
             while (rs.next()) {
-                registros.add(new Categoria(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4)));
+                registros.add(new Articulo(rs.getInt(1),rs.getInt(2),rs.getString(10),rs.getString(3),rs.getString(4),rs.getDouble(5),rs.getInt(6),rs.getString(7),rs.getString(8),rs.getBoolean(9)));
             }
             ps.close();
             rs.close();
@@ -51,12 +54,18 @@ public class CategoriaDAO implements Crud<Categoria> {
     }
 
     @Override
-    public boolean insert(Categoria obj) {
+    public boolean insert(Articulo obj) {
         resp = false;
         try {
-            ps = CON.conectar().prepareStatement("INSERT INTO categoria (nombre,descripcion,activo) values(?,?,1)");
-            ps.setString(1, obj.getNombre());
-            ps.setString(2, obj.getDescripcion());
+            ps = CON.conectar().prepareStatement("INSERT INTO articulo (categoria_id,codigo,nombre,precio_venta,stock,descripcion,imagen,activo) values(?,?,?,?,?,?,?,1)");
+            ps.setInt(1, obj.getCategoria_id());
+            ps.setString(2, obj.getCodigo());
+            ps.setString(3, obj.getNombre());
+            ps.setDouble(4, obj.getPrecio_venta());
+            ps.setInt(5, obj.getStock());
+            ps.setString(6, obj.getDescripcion());
+            ps.setString(7, obj.getImagen());
+            
             if (ps.executeUpdate() > 0) {
                 resp = true;
             }
@@ -71,13 +80,18 @@ public class CategoriaDAO implements Crud<Categoria> {
     }
 
     @Override
-    public boolean update(Categoria obj) {
+    public boolean update(Articulo obj) {
         resp = false;
         try {
-            ps = CON.conectar().prepareStatement("UPDATE categoria SET nombre = ?, descripcion = ? where idcategoria =?");
-            ps.setString(1, obj.getNombre());
-            ps.setString(2, obj.getDescripcion());
-            ps.setInt(3, obj.getIdcategoria());
+            ps = CON.conectar().prepareStatement("UPDATE articulo SET categoria_id=?, codigo=?, nombre = ?,precio_venta=?,stock=? , descripcion = ?, imagen=? where idarticulo =?");
+            ps.setInt(1, obj.getCategoria_id());
+            ps.setString(2, obj.getCodigo());
+            ps.setString(3, obj.getNombre());
+            ps.setDouble(4, obj.getPrecio_venta());
+            ps.setInt(5, obj.getStock());
+            ps.setString(6, obj.getDescripcion());
+            ps.setString(7, obj.getImagen());
+            ps.setInt(8, obj.getIdarticulo());
             if (ps.executeUpdate() > 0) {
                 resp = true;
             }
@@ -95,7 +109,7 @@ public class CategoriaDAO implements Crud<Categoria> {
     public boolean desactivate(int id) {
         resp = false;
         try {
-            ps = CON.conectar().prepareStatement("UPDATE categoria SET activo = 0 where idcategoria =?");
+            ps = CON.conectar().prepareStatement("UPDATE articulo SET activo = 0 where idarticulo =?");
             ps.setInt(1, id);
             if (ps.executeUpdate() > 0) {
                 resp = true;
@@ -114,7 +128,7 @@ public class CategoriaDAO implements Crud<Categoria> {
     public boolean activate(int id) {
         resp = false;
         try {
-            ps = CON.conectar().prepareStatement("UPDATE categoria SET activo = 1 where idcategoria =?");
+            ps = CON.conectar().prepareStatement("UPDATE articulo SET activo = 1 where idarticulo =?");
             ps.setInt(1, id);
             if (ps.executeUpdate() > 0) {
                 resp = true;
@@ -133,7 +147,7 @@ public class CategoriaDAO implements Crud<Categoria> {
     public int count() {
         int totales = 0;
         try {
-            ps = CON.conectar().prepareStatement("select count(idcategoria) as total from categoria");
+            ps = CON.conectar().prepareStatement("select count(idarticulo) as total from articulo");
             rs = ps.executeQuery();
             while(rs.next()){
                 totales=rs.getInt("total");
@@ -152,7 +166,7 @@ public class CategoriaDAO implements Crud<Categoria> {
     public boolean exist(String texto) {
         resp = false;
         try {
-            ps = CON.conectar().prepareStatement("select nombre from categoria where nombre = ?");
+            ps = CON.conectar().prepareStatement("select nombre from articulo where nombre = ?");
             ps.setString(1, texto);
             rs = ps.executeQuery();
             rs.last();
@@ -168,24 +182,6 @@ public class CategoriaDAO implements Crud<Categoria> {
         }
         return resp;
     }
-    public List<Categoria> select() {
-        List<Categoria> registros = new ArrayList<>();
-        try {
-            ps = CON.conectar().prepareStatement("select idcategoria,nombre from categoria order by nombre asc");
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                registros.add(new Categoria(rs.getInt(1), rs.getString(2)));
-            }
-            ps.close();
-            rs.close();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        } finally {
-            ps = null;
-            rs = null;
-            CON.desconectar();
-        }
-        return registros;
-    }
+
 
 }

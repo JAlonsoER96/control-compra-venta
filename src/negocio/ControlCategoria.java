@@ -16,7 +16,7 @@ import entidades.Categoria;
  *
  * @author Alonso Romero
  */
-public class ContolCategoria {
+public class ControlCategoria {
 
     private final CategoriaDAO DATOS;
     private final Categoria cat;
@@ -24,7 +24,7 @@ public class ContolCategoria {
     private int totalMostrados;
 
     //Constructor
-    public ContolCategoria() {
+    public ControlCategoria() {
         super();
         this.DATOS = new CategoriaDAO();
         this.cat = new Categoria();

@@ -5,43 +5,91 @@
  */
 package presentacion;
 
-import javax.swing.JOptionPane;
+import entidades.Categoria;
+import java.awt.Image;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import javax.swing.*;
 import javax.swing.table.TableRowSorter;
-import negocio.ControlCategoria;
+import negocio.ControlArticulo;
 
 /**
  *
  * @author Alonso Romero
  */
-public class FrmCategoria extends javax.swing.JInternalFrame {
+public class FrmArticulo extends javax.swing.JInternalFrame {
 
-    private final ControlCategoria CONTROL;
+    private final ControlArticulo CONTROL;
     private String accion;
     private String nombreAnte;
+    private String rutaOrigen;
+    private String rutaDestino;
+    private final String DIR = "src/files/articulos/";
+    private String imagen = "";
 
     /**
      * Creates new form FrmCategoria
      */
-    public FrmCategoria() {
+    public FrmArticulo() {
         super();
         initComponents();
-        this.CONTROL = new ControlCategoria();
+        this.CONTROL = new ControlArticulo();
         this.listar("");
         this.accion = "guardar";
         lblNumRegistro.setVisible(false);
+        this.cargarCategorias();
     }
 
     //Listar categorias
+    private void ocultarColumnas(){
+        this.tablaListadoCat.getColumnModel().getColumn(1).setMaxWidth(0);
+        this.tablaListadoCat.getColumnModel().getColumn(1).setMinWidth(0);
+        this.tablaListadoCat.getTableHeader().getColumnModel().getColumn(1).setMaxWidth(0);
+        this.tablaListadoCat.getTableHeader().getColumnModel().getColumn(1).setMinWidth(0);
+    }
     private void listar(String text) {
-        tablaListadoCat.setModel(this.CONTROL.listar(text));
+        tablaListadoCat.setModel(this.CONTROL.listar(text,10,1));
         TableRowSorter orden = new TableRowSorter(tablaListadoCat.getModel());
         tablaListadoCat.setRowSorter(orden);
+        this.ocultarColumnas();
         lblTotalRegistros.setText("Mostrando: " + this.CONTROL.showAll() + " de un total de: " + this.CONTROL.count() + " registros");
     }
-
+    private void cargarCategorias(){
+        DefaultComboBoxModel items = CONTROL.select();
+        this.comboCat.setModel(items);
+    }
+    public void cargarImagen(){
+        File origen = new File(this.rutaOrigen);
+        File destino = new File(this.rutaDestino);
+        try {
+            InputStream in = new FileInputStream(origen);
+            OutputStream out = new FileOutputStream(destino);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
     private void limpiar() {
-        this.txtNewCatName.setText("");
+        this.txtNewArtName.setText("");
         this.txtDescription.setText("");
+        this.txtCodigo.setText("");
+        this.txtPrecioVenta.setText("");
+        txtStock.setText("");
+        imagen = "";
+        this.lblNumRegistro.setText("");
+        lblImagen.setIcon(null);
+        this.rutaDestino = "";
+        this.rutaOrigen = "";
         this.accion = "guardar";
     }
 
@@ -75,7 +123,7 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
         btnDesactivar = new javax.swing.JButton();
         panelManteCat = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        txtNewCatName = new javax.swing.JTextField();
+        txtNewArtName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtDescription = new javax.swing.JTextArea();
@@ -83,12 +131,23 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
         btnCancelar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         lblNumRegistro = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        comboCat = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        txtCodigo = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txtPrecioVenta = new javax.swing.JFormattedTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txtStock = new javax.swing.JFormattedTextField();
+        jLabel9 = new javax.swing.JLabel();
+        lblImagen = new javax.swing.JLabel();
+        btnCargar = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
-        setTitle("Categorias");
+        setTitle("Artículos");
 
         panelListadoCat.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -178,7 +237,7 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
                         .addComponent(btnNuevo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEditar)
-                        .addGap(0, 132, Short.MAX_VALUE))
+                        .addGap(0, 977, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelListadoCatLayout.createSequentialGroup()
                         .addGap(40, 40, 40)
                         .addComponent(btnActivar)
@@ -199,30 +258,30 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
                     .addComponent(btnNuevo)
                     .addComponent(btnEditar))
                 .addGap(28, 28, 28)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelListadoCatLayout.createSequentialGroup()
-                        .addGap(27, 27, 27)
+                        .addGap(9, 9, 9)
                         .addComponent(lblTotalRegistros))
-                    .addGroup(panelListadoCatLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnActivar)
-                            .addComponent(btnDesactivar))))
-                .addContainerGap(32, Short.MAX_VALUE))
+                    .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnActivar)
+                        .addComponent(btnDesactivar)))
+                .addGap(28, 28, 28))
         );
 
         panelNuevo.addTab("Listado", panelListadoCat);
 
         panelManteCat.setBackground(new java.awt.Color(255, 255, 255));
+        panelManteCat.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         jLabel1.setText("Nombre(*): ");
 
-        txtNewCatName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtNewCatName.addActionListener(new java.awt.event.ActionListener() {
+        txtNewArtName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNewArtName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNewCatNameActionPerformed(evt);
+                txtNewArtNameActionPerformed(evt);
             }
         });
 
@@ -254,6 +313,36 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
 
         lblNumRegistro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
+        jLabel5.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
+        jLabel5.setText("Codígo: ");
+
+        jLabel6.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
+        jLabel6.setText("Categoría(*): ");
+
+        jLabel7.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
+        jLabel7.setText("Precio Venta(*)");
+
+        txtPrecioVenta.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+
+        jLabel8.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
+        jLabel8.setText("Stock(*):");
+
+        txtStock.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        jLabel9.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
+        jLabel9.setText("Imagen:");
+
+        lblImagen.setBackground(new java.awt.Color(101, 189, 19));
+        lblImagen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btnCargar.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
+        btnCargar.setText("Cargar Imagen");
+        btnCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelManteCatLayout = new javax.swing.GroupLayout(panelManteCat);
         panelManteCat.setLayout(panelManteCatLayout);
         panelManteCatLayout.setHorizontalGroup(
@@ -261,44 +350,86 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
             .addGroup(panelManteCatLayout.createSequentialGroup()
                 .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelManteCatLayout.createSequentialGroup()
-                        .addGap(368, 368, 368)
+                        .addGap(314, 314, 314)
+                        .addComponent(lblNumRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addGroup(panelManteCatLayout.createSequentialGroup()
+                                .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(panelManteCatLayout.createSequentialGroup()
+                                        .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(panelManteCatLayout.createSequentialGroup()
+                                                .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(txtNewArtName)
+                                                    .addComponent(comboCat, 0, 308, Short.MAX_VALUE)
+                                                    .addComponent(txtStock))
+                                                .addGap(28, 28, 28)
+                                                .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel7)
+                                                    .addComponent(jLabel5)))
+                                            .addComponent(lblImagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(52, 52, 52)
+                                        .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtCodigo)
+                                            .addComponent(txtPrecioVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                                            .addComponent(btnCargar)))
+                                    .addComponent(jLabel4)))))
+                    .addGroup(panelManteCatLayout.createSequentialGroup()
+                        .addGap(744, 744, 744)
                         .addComponent(btnGuardar)
                         .addGap(62, 62, 62)
-                        .addComponent(btnCancelar))
-                    .addGroup(panelManteCatLayout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3))
-                        .addGap(35, 35, 35)
-                        .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelManteCatLayout.createSequentialGroup()
-                                .addComponent(txtNewCatName, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblNumRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel4)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(137, Short.MAX_VALUE))
+                        .addComponent(btnCancelar)))
+                .addContainerGap(378, Short.MAX_VALUE))
         );
         panelManteCatLayout.setVerticalGroup(
             panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelManteCatLayout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtNewCatName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNumRegistro))
-                .addGap(60, 60, 60)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelManteCatLayout.createSequentialGroup()
+                .addGap(82, 82, 82)
                 .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(txtNewArtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5)
+                        .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblNumRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34)
+                .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(comboCat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtPrecioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(37, 37, 37)
+                .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelManteCatLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(lblImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelManteCatLayout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(btnCargar)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
-                .addGap(73, 73, 73)
+                .addGap(46, 46, 46)
                 .addGroup(panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
                     .addComponent(btnCancelar))
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addGap(103, 103, 103))
         );
 
         panelNuevo.addTab("Mantenimiento", panelManteCat);
@@ -313,6 +444,8 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelNuevo)
         );
+
+        getAccessibleContext().setAccessibleName("Articulo");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -329,9 +462,9 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
         this.listar(txtCatNombre.getText());
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void txtNewCatNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNewCatNameActionPerformed
+    private void txtNewArtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNewArtNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtNewCatNameActionPerformed
+    }//GEN-LAST:event_txtNewArtNameActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         panelNuevo.setEnabledAt(1, true);
@@ -349,9 +482,19 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        if (txtNewCatName.getText().length() == 0 || txtNewCatName.getText().length() > 255) {
+        if (txtNewArtName.getText().length() == 0 || txtNewArtName.getText().length() > 255) {
             JOptionPane.showMessageDialog(this, "El campo nombre es obligatorio", "Sistema", JOptionPane.WARNING_MESSAGE);
-            txtNewCatName.requestFocus();
+            txtNewArtName.requestFocus();
+            return;
+        }
+        if (txtPrecioVenta.getText().length()==0) {
+            JOptionPane.showMessageDialog(this, "Ingrese un precio de venta", "Sistema", JOptionPane.WARNING_MESSAGE);
+            txtNewArtName.requestFocus();
+            return;
+        }
+        if (txtStock.getText().length()==0) {
+            JOptionPane.showMessageDialog(this, "Ingrese un número de stock", "Sistema", JOptionPane.WARNING_MESSAGE);
+            txtNewArtName.requestFocus();
             return;
         }
         if (txtDescription.getText().length() > 255) {
@@ -362,7 +505,8 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
         String resp;
         if (this.accion.equals("editar")) {
             //Editar
-            resp = this.CONTROL.update(Integer.parseInt(lblNumRegistro.getText()), txtNewCatName.getText(), this.nombreAnte, txtDescription.getText());
+            resp = "OK";
+            //resp = this.CONTROL.update(Integer.parseInt(lblNumRegistro.getText()), txtNewCatName.getText(), this.nombreAnte, txtDescription.getText());
             if (resp.equals("OK")) {
                 this.successMessage("Actualizado Correctamente");
                 this.limpiar();
@@ -372,8 +516,12 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
             }
         } else {
             //Guardar
-            resp = this.CONTROL.insert(txtNewCatName.getText(), txtDescription.getText());
+            Categoria seleccionado = (Categoria)comboCat.getSelectedItem();
+            resp = this.CONTROL.insert(seleccionado.getIdcategoria(), txtCodigo.getText(),txtNewArtName.getText(), Double.parseDouble(txtPrecioVenta.getText()), Integer.parseInt(txtStock.getText()),txtDescription.getText(),this.imagen);
             if (resp.equals("OK")) {
+                if(!this.imagen.equals("")){
+                    this.cargarImagen();
+                }
                 this.successMessage("Registrado correctamente");
                 this.limpiar();
                 this.listar("");
@@ -391,7 +539,7 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
             String descripcion = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 2));
 
             lblNumRegistro.setText(id);
-            txtNewCatName.setText(nombre);
+            txtNewArtName.setText(nombre);
             txtDescription.setText(descripcion);
 
             panelNuevo.setEnabledAt(1, true);
@@ -440,22 +588,45 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnActivarActionPerformed
 
+    private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
+        // TODO add your handling code here:
+        JFileChooser file = new JFileChooser();
+        int estado = file.showOpenDialog(this);
+        if (estado==JFileChooser.APPROVE_OPTION) {
+            this.imagen = file.getSelectedFile().getName();
+            this.rutaOrigen = file.getSelectedFile().getAbsolutePath();
+            this.rutaDestino = DIR+this.imagen;
+            ImageIcon im = new ImageIcon(this.rutaOrigen);
+            Icon icon = new ImageIcon(im.getImage().getScaledInstance(this.lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
+            this.lblImagen.setIcon(icon);
+            this.lblImagen.repaint();
+        }
+    }//GEN-LAST:event_btnCargarActionPerformed
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActivar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnCargar;
     private javax.swing.JButton btnDesactivar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox<String> comboCat;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblImagen;
     private javax.swing.JLabel lblNumRegistro;
     private javax.swing.JLabel lblTotalRegistros;
     private javax.swing.JPanel panelListadoCat;
@@ -463,7 +634,10 @@ public class FrmCategoria extends javax.swing.JInternalFrame {
     private javax.swing.JTabbedPane panelNuevo;
     private javax.swing.JTable tablaListadoCat;
     private javax.swing.JTextField txtCatNombre;
+    private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextArea txtDescription;
-    private javax.swing.JTextField txtNewCatName;
+    private javax.swing.JTextField txtNewArtName;
+    private javax.swing.JFormattedTextField txtPrecioVenta;
+    private javax.swing.JFormattedTextField txtStock;
     // End of variables declaration//GEN-END:variables
 }
