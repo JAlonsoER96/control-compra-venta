@@ -74,7 +74,7 @@ public class CategoriaDAO implements Crud<Categoria> {
     public boolean update(Categoria obj) {
         resp = false;
         try {
-            ps = CON.conectar().prepareStatement("UPDATE categoria SET nombre = ?, descripcion = ? where id =?");
+            ps = CON.conectar().prepareStatement("UPDATE categoria SET nombre = ?, descripcion = ? where idcategoria =?");
             ps.setString(1, obj.getNombre());
             ps.setString(2, obj.getDescripcion());
             ps.setInt(3, obj.getIdcategoria());
@@ -95,7 +95,7 @@ public class CategoriaDAO implements Crud<Categoria> {
     public boolean desactivate(int id) {
         resp = false;
         try {
-            ps = CON.conectar().prepareStatement("UPDATE categoria SET activo = 0 where id =?");
+            ps = CON.conectar().prepareStatement("UPDATE categoria SET activo = 0 where idcategoria =?");
             ps.setInt(1, id);
             if (ps.executeUpdate() > 0) {
                 resp = true;
@@ -114,7 +114,7 @@ public class CategoriaDAO implements Crud<Categoria> {
     public boolean activate(int id) {
         resp = false;
         try {
-            ps = CON.conectar().prepareStatement("UPDATE categoria SET activo = 1 where id =?");
+            ps = CON.conectar().prepareStatement("UPDATE categoria SET activo = 1 where idcategoria =?");
             ps.setInt(1, id);
             if (ps.executeUpdate() > 0) {
                 resp = true;
@@ -133,7 +133,7 @@ public class CategoriaDAO implements Crud<Categoria> {
     public int count() {
         int totales = 0;
         try {
-            ps = CON.conectar().prepareStatement("select count(id) as total from categoria");
+            ps = CON.conectar().prepareStatement("select count(idcategoria) as total from categoria");
             rs = ps.executeQuery();
             while(rs.next()){
                 totales=rs.getInt("total");
@@ -171,7 +171,7 @@ public class CategoriaDAO implements Crud<Categoria> {
     public List<Categoria> select() {
         List<Categoria> registros = new ArrayList<>();
         try {
-            ps = CON.conectar().prepareStatement("select id,nombre from categoria order by nombre asc");
+            ps = CON.conectar().prepareStatement("select idcategoria,nombre from categoria order by nombre asc");
             rs = ps.executeQuery();
             while (rs.next()) {
                 registros.add(new Categoria(rs.getInt(1), rs.getString(2)));

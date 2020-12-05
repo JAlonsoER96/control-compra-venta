@@ -30,15 +30,21 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
     private String rutaDestino;
     private final String DIR = "src/files/articulos/";
     private String imagen = "";
+    private String imagenAnt = "";
+    private int totalPorPagina =10;
+    private int numPagina =1;
+    private boolean primerCarga = true;
+    private int totalRegistros;
 
     /**
      * Creates new form FrmCategoria
      */
     public FrmArticulo() {
-        super();
         initComponents();
         this.CONTROL = new ControlArticulo();
-        this.listar("");
+        this.paginar();
+        this.listar("",false);
+        this.primerCarga=false;
         this.accion = "guardar";
         lblNumRegistro.setVisible(false);
         this.cargarCategorias();
@@ -51,8 +57,33 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         this.tablaListadoCat.getTableHeader().getColumnModel().getColumn(1).setMaxWidth(0);
         this.tablaListadoCat.getTableHeader().getColumnModel().getColumn(1).setMinWidth(0);
     }
-    private void listar(String text) {
-        tablaListadoCat.setModel(this.CONTROL.listar(text,10,1));
+    private void paginar(){
+        int totalPaginas;
+        this.totalRegistros = this.CONTROL.showAll();
+        this.totalPorPagina = Integer.parseInt((String)comboTotalPorPagina.getSelectedItem());
+        totalPaginas = (int)(Math.ceil((double)this.totalRegistros/this.totalPorPagina));
+        if (totalPaginas==0) {
+            totalPaginas=1;
+        }
+        comboPagina.removeAllItems();
+        for (int i = 0; i <totalPaginas; i++) {
+            comboPagina.addItem(Integer.toString(i+1));
+        }
+        comboPagina.setSelectedIndex(0);
+    }
+    
+    private void listar(String text, boolean paginar) {
+        this.totalPorPagina = Integer.parseInt((String)comboTotalPorPagina.getSelectedItem());
+        if ((String)comboPagina.getSelectedItem()!=null) {
+            this.numPagina = Integer.parseInt((String)comboPagina.getSelectedItem());
+        }
+        if(paginar = true){
+            
+            tablaListadoCat.setModel(this.CONTROL.listar(text,this.totalPorPagina,this.numPagina));
+        }else{
+            tablaListadoCat.setModel(this.CONTROL.listar(text,this.totalPorPagina,1));
+        }
+        
         TableRowSorter orden = new TableRowSorter(tablaListadoCat.getModel());
         tablaListadoCat.setRowSorter(orden);
         this.ocultarColumnas();
@@ -91,6 +122,7 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         this.rutaDestino = "";
         this.rutaOrigen = "";
         this.accion = "guardar";
+        this.imagenAnt = "";
     }
 
     private void errorMesagge(String mensaje) {
@@ -121,6 +153,10 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         btnEditar = new javax.swing.JButton();
         btnActivar = new javax.swing.JButton();
         btnDesactivar = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        comboPagina = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        comboTotalPorPagina = new javax.swing.JComboBox<>();
         panelManteCat = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNewArtName = new javax.swing.JTextField();
@@ -175,6 +211,7 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
             }
         });
 
+        tablaListadoCat.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         tablaListadoCat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -219,6 +256,26 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel10.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel10.setText("# Pagína:");
+
+        comboPagina.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        comboPagina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboPaginaActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel11.setText("Total de registros:");
+
+        comboTotalPorPagina.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10", "20", "30", "50", "100" }));
+        comboTotalPorPagina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboTotalPorPaginaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelListadoCatLayout = new javax.swing.GroupLayout(panelListadoCat);
         panelListadoCat.setLayout(panelListadoCatLayout);
         panelListadoCatLayout.setHorizontalGroup(
@@ -228,22 +285,32 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
                 .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(panelListadoCatLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCatNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnNuevo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEditar)
-                        .addGap(0, 977, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelListadoCatLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(btnActivar)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnDesactivar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelListadoCatLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCatNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnBuscar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnNuevo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnEditar))
+                            .addGroup(panelListadoCatLayout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnActivar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnDesactivar)
+                                    .addGroup(panelListadoCatLayout.createSequentialGroup()
+                                        .addComponent(comboPagina, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(68, 68, 68)
+                                        .addComponent(jLabel11)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(comboTotalPorPagina, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 651, Short.MAX_VALUE)
                         .addComponent(lblTotalRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -259,14 +326,18 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
                     .addComponent(btnEditar))
                 .addGap(28, 28, 28)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelListadoCatLayout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(lblTotalRegistros))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel10)
                     .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnActivar)
-                        .addComponent(btnDesactivar)))
+                        .addComponent(comboPagina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11)
+                        .addComponent(comboTotalPorPagina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTotalRegistros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnActivar)
+                    .addComponent(btnDesactivar))
                 .addGap(28, 28, 28))
         );
 
@@ -278,7 +349,7 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         jLabel1.setText("Nombre(*): ");
 
-        txtNewArtName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNewArtName.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         txtNewArtName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNewArtNameActionPerformed(evt);
@@ -289,7 +360,7 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         jLabel3.setText("Descripción");
 
         txtDescription.setColumns(20);
-        txtDescription.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtDescription.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         txtDescription.setRows(5);
         jScrollPane2.setViewportView(txtDescription);
 
@@ -316,8 +387,12 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
         jLabel5.setText("Codígo: ");
 
+        comboCat.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+
         jLabel6.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
         jLabel6.setText("Categoría(*): ");
+
+        txtCodigo.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
         jLabel7.setText("Precio Venta(*)");
@@ -328,6 +403,7 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         jLabel8.setText("Stock(*):");
 
         txtStock.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtStock.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
 
         jLabel9.setFont(new java.awt.Font("Bitstream Vera Sans", 0, 16)); // NOI18N
         jLabel9.setText("Imagen:");
@@ -387,7 +463,7 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
                         .addComponent(btnGuardar)
                         .addGap(62, 62, 62)
                         .addComponent(btnCancelar)))
-                .addContainerGap(378, Short.MAX_VALUE))
+                .addContainerGap(464, Short.MAX_VALUE))
         );
         panelManteCatLayout.setVerticalGroup(
             panelManteCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -459,7 +535,7 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnBuscarStateChanged
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        this.listar(txtCatNombre.getText());
+        this.listar(txtCatNombre.getText(),false);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtNewArtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNewArtNameActionPerformed
@@ -505,12 +581,21 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         String resp;
         if (this.accion.equals("editar")) {
             //Editar
-            resp = "OK";
-            //resp = this.CONTROL.update(Integer.parseInt(lblNumRegistro.getText()), txtNewCatName.getText(), this.nombreAnte, txtDescription.getText());
+            String imagenActual = "";
+            if (!this.imagenAnt.equals("")) {
+                imagenActual = this.imagenAnt;
+            }else{
+                imagenActual = this.imagen;
+            }
+            Categoria seleccionado = (Categoria)comboCat.getSelectedItem();
+            resp = this.CONTROL.update(Integer.parseInt(lblNumRegistro.getText()),seleccionado.getIdcategoria(),txtCodigo.getText(),txtNewArtName.getText(),this.nombreAnte,Double.parseDouble(txtPrecioVenta.getText()), Integer.parseInt(txtStock.getText()),txtDescription.getText(),imagenActual);
             if (resp.equals("OK")) {
-                this.successMessage("Actualizado Correctamente");
+                if (!this.imagen.equals("")) {
+                    this.cargarImagen();
+                }
+                this.successMessage("Actuailzado Correctamente");
                 this.limpiar();
-                this.listar("");
+                this.listar("",false);
             } else {
                 this.errorMesagge(resp);
             }
@@ -524,7 +609,7 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
                 }
                 this.successMessage("Registrado correctamente");
                 this.limpiar();
-                this.listar("");
+                this.listar("",false);
             } else {
                 this.errorMesagge(resp);
             }
@@ -534,13 +619,30 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         if (tablaListadoCat.getSelectedRowCount() == 1) {
             String id = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 0));
-            String nombre = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 1));
-            this.nombreAnte = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 1));
-            String descripcion = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 2));
-
+            int idCat = Integer.parseInt(String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 1)));
+            String catAnt = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 2));
+            String codigo =String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 3));
+            String nombre = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 4));
+            this.nombreAnte = nombre;
+            String precioVenta = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 5));
+            String stock = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 6));
+            String descripcion = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 7));
+            this.imagenAnt =String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 8));
+            
             lblNumRegistro.setText(id);
+            Categoria seleccionado = new Categoria(idCat, catAnt);
+            comboCat.setSelectedItem(seleccionado);
+            txtCodigo.setText(codigo);
             txtNewArtName.setText(nombre);
+            txtPrecioVenta.setText(precioVenta);
+            txtStock.setText(stock);
             txtDescription.setText(descripcion);
+            
+            //CargarImagen
+            ImageIcon im = new ImageIcon(this.DIR+this.imagenAnt);
+            Icon icon = new ImageIcon(im.getImage().getScaledInstance(this.lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
+            this.lblImagen.setIcon(icon);
+            this.lblImagen.repaint();
 
             panelNuevo.setEnabledAt(1, true);
             panelNuevo.setEnabledAt(0, false);
@@ -555,12 +657,12 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
     private void btnDesactivarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesactivarActionPerformed
         if (tablaListadoCat.getSelectedRowCount() == 1) {
             String id = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 0));
-            String nombre = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 1));
-            if (JOptionPane.showConfirmDialog(this, "¿Deseas desactivar la categoría: "+nombre+ "?: ","Desactivar", JOptionPane.YES_NO_OPTION)==0) {
+            String nombre = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 4));
+            if (JOptionPane.showConfirmDialog(this, "¿Deseas desactivar el articulo: "+nombre+ "?: ","Desactivar", JOptionPane.YES_NO_OPTION)==0) {
                 String resp = this.CONTROL.desactivate(Integer.parseInt(id));
                 if (resp=="OK") {
                     this.successMessage("Registro desactivado");
-                    this.listar("");
+                    this.listar("",false);
                 }else{
                     this.errorMesagge(resp);
                 }
@@ -573,12 +675,12 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
     private void btnActivarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActivarActionPerformed
         if (tablaListadoCat.getSelectedRowCount() == 1) {
             String id = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 0));
-            String nombre = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 1));
-            if (JOptionPane.showConfirmDialog(this, "¿Deseas activar la categoría: "+nombre+ "?: ","Activar", JOptionPane.YES_NO_OPTION)==0) {
+            String nombre = String.valueOf(tablaListadoCat.getValueAt(tablaListadoCat.getSelectedRow(), 4));
+            if (JOptionPane.showConfirmDialog(this, "¿Deseas activar el articulo: "+nombre+ "?: ","Activar", JOptionPane.YES_NO_OPTION)==0) {
                 String resp = this.CONTROL.activate(Integer.parseInt(id));
                 if (resp=="OK") {
                     this.successMessage("Registro activado");
-                    this.listar("");
+                    this.listar("",false);
                 }else{
                     this.errorMesagge(resp);
                 }
@@ -603,6 +705,17 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnCargarActionPerformed
 
+    private void comboPaginaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPaginaActionPerformed
+        if (this.primerCarga == false) {
+            this.listar("", true);
+        }
+    }//GEN-LAST:event_comboPaginaActionPerformed
+
+    private void comboTotalPorPaginaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTotalPorPaginaActionPerformed
+        // TODO add your handling code here:
+        this.paginar();
+    }//GEN-LAST:event_comboTotalPorPaginaActionPerformed
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -615,7 +728,11 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> comboCat;
+    private javax.swing.JComboBox<String> comboPagina;
+    private javax.swing.JComboBox<String> comboTotalPorPagina;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

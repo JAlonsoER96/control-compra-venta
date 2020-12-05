@@ -18,8 +18,8 @@ public class Conexion {
     private final String HOST="localhost";
     private final int PUERTO=3306;
     private final String DB="dbsistema";
-    private final String USER="dbsistemaadmin";
-    private final String PASSWORD="dbsistemap4$$";
+    private final String USER="root";
+    private final String PASSWORD="";
     private final String URL=  String.format("jdbc:mysql://%s:%d/%s?useSSL=false", HOST,PUERTO,DB);  //"jdbc:mysql://localhost:3306/";
     
     public Connection cadena;

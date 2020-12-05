@@ -32,7 +32,7 @@ public class ArticuloDAO implements CrudPaginado<Articulo> {
     public List<Articulo> list(String texto, int totalPerPagina,int numPagina) {
         List<Articulo> registros = new ArrayList<>();
         try {
-            ps = CON.conectar().prepareStatement("select a.*, c.nombre as categoria from articulo as a inner join categoria as c on a.categoria_id = c.id "+
+            ps = CON.conectar().prepareStatement("select a.*, c.nombre as categoria from articulo as a inner join categoria as c on a.categoria_id = c.idcategoria "+
                     "where a.nombre LIKE ? order by a.idarticulo asc limit ? , ?");
             ps.setString(1, "%" + texto + "%");
             ps.setInt(2, (numPagina-1)*totalPerPagina);

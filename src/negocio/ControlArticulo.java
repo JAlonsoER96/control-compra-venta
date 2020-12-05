@@ -101,6 +101,7 @@ public class ControlArticulo {
     public String update(int id, int categoria_id, String codigo, String nombre, String nombreAnt, double precio_venta, int stock, String descripcion, String imagen) {
         if (nombre.equals(nombreAnt)) {
             art.setIdarticulo(id);
+            art.setCategoria_id(categoria_id);
             art.setCodigo(codigo);
             art.setNombre(nombre);
             art.setPrecio_venta(precio_venta);
