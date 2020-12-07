@@ -149,6 +149,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
             mnuItemUsuario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.ALT_MASK));
             mnuItemUsuario.setText("Usuario");
+            mnuItemUsuario.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    mnuItemUsuarioActionPerformed(evt);
+                }
+            });
             mnuAcceso.add(mnuItemUsuario);
 
             escritorio.add(mnuAcceso);
@@ -194,6 +199,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void mnuItemRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemRolActionPerformed
         // TODO add your handling code here:
+        FrmRol frmr = new FrmRol();
+        principal.add(frmr);
+        frmr.setVisible(true);
     }//GEN-LAST:event_mnuItemRolActionPerformed
 
     private void mnuAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAlmacenActionPerformed
@@ -209,6 +217,13 @@ public class FrmPrincipal extends javax.swing.JFrame {
         principal.add(frmc);
         frmc.setVisible(true);
     }//GEN-LAST:event_mnuItemCategoriaActionPerformed
+
+    private void mnuItemUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemUsuarioActionPerformed
+        // TODO add your handling code here:
+        FrmUsuario frmu = new FrmUsuario();
+        principal.add(frmu);
+        frmu.setVisible(true);
+    }//GEN-LAST:event_mnuItemUsuarioActionPerformed
 
     /**
      * @param args the command line arguments

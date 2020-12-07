@@ -25,7 +25,6 @@ public class ControlCategoria {
 
     //Constructor
     public ControlCategoria() {
-        super();
         this.DATOS = new CategoriaDAO();
         this.cat = new Categoria();
         this.totalMostrados=0;
