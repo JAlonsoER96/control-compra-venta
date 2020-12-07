@@ -100,6 +100,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
             mnuItemIngreso.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.ALT_MASK));
             mnuItemIngreso.setText("Ingresos");
+            mnuItemIngreso.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    mnuItemIngresoActionPerformed(evt);
+                }
+            });
             mnuCompra.add(mnuItemIngreso);
 
             escritorio.add(mnuCompra);
@@ -109,6 +114,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
             mnuItemCliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.ALT_MASK));
             mnuItemCliente.setText("Cliente");
+            mnuItemCliente.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    mnuItemClienteActionPerformed(evt);
+                }
+            });
             mnuVentas.add(mnuItemCliente);
 
             mnuItemVenta.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.ALT_MASK));
@@ -191,6 +201,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void mnuItemProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemProveedorActionPerformed
         // TODO add your handling code here:
+        FrmProveedor frmp = new FrmProveedor();
+        principal.add(frmp);
+        frmp.setVisible(true);
     }//GEN-LAST:event_mnuItemProveedorActionPerformed
 
     private void mnuItemVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemVentaActionPerformed
@@ -224,6 +237,17 @@ public class FrmPrincipal extends javax.swing.JFrame {
         principal.add(frmu);
         frmu.setVisible(true);
     }//GEN-LAST:event_mnuItemUsuarioActionPerformed
+
+    private void mnuItemIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemIngresoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuItemIngresoActionPerformed
+
+    private void mnuItemClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemClienteActionPerformed
+        // TODO add your handling code here:
+        FrmCliente frmc = new FrmCliente();
+        principal.add(frmc);
+        frmc.setVisible(true);
+    }//GEN-LAST:event_mnuItemClienteActionPerformed
 
     /**
      * @param args the command line arguments

@@ -7,7 +7,6 @@ package negocio;
 
 import datos.UsuarioDAO;
 import datos.RolDAO;
-import entidades.Categoria;
 import entidades.Rol;
 import entidades.Usuario;
 import java.security.MessageDigest;
@@ -42,7 +41,7 @@ public class ControlUsuario {
         List<Usuario> lista = new ArrayList();
         lista.addAll(DATOS.list(texto, totalPerPagina, numPagina));
         //Encabezados de tabla
-        String[] titulos = {"ID", "Articulo Id", "Rol", "Nombre", "Tipo documento", "# Documento", "Dirección", "Teléfono", "Email", "Clave", "Estado"};
+        String[] titulos = {"ID", "Rol Id", "Rol", "Nombre", "Tipo documento", "# Documento", "Dirección", "Teléfono", "Email", "Clave", "Estado"};
         //Instanción modelo tabla
         this.model = new DefaultTableModel(null, titulos);
         String estado;
