@@ -40,6 +40,17 @@ public class Usuario {
         this.clave = clave;
         this.activo = activo;
     }
+    //Constructor login
+
+    public Usuario(int idusuario,int rol_id, String nombreRol, String nombre, String email, boolean activo) {
+        this.idusuario = idusuario;
+        this.rol_id = rol_id;
+        this.nombreRol = nombreRol;
+        this.nombre = nombre;
+        this.email = email;
+        this.activo = activo;
+    }
+    
     //getters and setters
     public int getIdusuario() {
         return idusuario;
@@ -120,7 +131,12 @@ public class Usuario {
     public void setClave(String clave) {
         this.clave = clave;
     }
-
+    
+    /**
+     *
+     * @author Alonso Romero
+     * @description Valida si el usuario esta activo o no
+     */
     public boolean isActivo() {
         return activo;
     }

@@ -4,7 +4,10 @@
  * and open the template in the editor.
  */
 package presentacion;
+
 import java.awt.*;
+import negocio.VariablesLogin;
+
 /**
  *
  * @author Alonso Romero
@@ -18,6 +21,20 @@ public class FrmPrincipal extends javax.swing.JFrame {
         initComponents();
         setExtendedState(MAXIMIZED_BOTH);
         setTitle("Control Compra - Venta");
+        this.cargarOpciones();
+    }
+
+    public void cargarOpciones() {
+        if (VariablesLogin.nombreRol.equals("Almacenero")) {
+            mnuVentas.setEnabled(false);
+            mnuAcceso.setEnabled(false);
+            mnuItemCV.setEnabled(false);
+        } else if (VariablesLogin.nombreRol.equals("Vendedor")) {
+            mnuCompra.setEnabled(false);
+            mnuAcceso.setEnabled(false);
+            mnuItemCI.setEnabled(false);
+            mnuAlmacen.setEnabled(false);
+        }
     }
 
     /**
@@ -51,7 +68,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
             mnuAcceso = new javax.swing.JMenu();
             mnuItemRol = new javax.swing.JMenuItem();
             mnuItemUsuario = new javax.swing.JMenuItem();
-            mnuItemSalir = new javax.swing.JMenu();
+            mnuSalir = new javax.swing.JMenu();
 
             setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
             setBackground(java.awt.Color.white);
@@ -168,14 +185,19 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
             escritorio.add(mnuAcceso);
 
-            mnuItemSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/presentacion/images/salir.png"))); // NOI18N
-            mnuItemSalir.setText("Salir");
-            mnuItemSalir.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    mnuItemSalirActionPerformed(evt);
+            mnuSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/presentacion/images/salir.png"))); // NOI18N
+            mnuSalir.setText("Salir");
+            mnuSalir.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    mnuSalirMouseClicked(evt);
                 }
             });
-            escritorio.add(mnuItemSalir);
+            mnuSalir.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    mnuSalirActionPerformed(evt);
+                }
+            });
+            escritorio.add(mnuSalir);
 
             setJMenuBar(escritorio);
 
@@ -221,9 +243,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_mnuAlmacenActionPerformed
 
-    private void mnuItemSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemSalirActionPerformed
+    private void mnuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSalirActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_mnuItemSalirActionPerformed
+    }//GEN-LAST:event_mnuSalirActionPerformed
 
     private void mnuItemCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemCategoriaActionPerformed
         FrmCategoria frmc = new FrmCategoria();
@@ -248,6 +270,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
         principal.add(frmc);
         frmc.setVisible(true);
     }//GEN-LAST:event_mnuItemClienteActionPerformed
+
+    private void mnuSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mnuSalirMouseClicked
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_mnuSalirMouseClicked
 
     /**
      * @param args the command line arguments
@@ -298,9 +325,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuItemIngreso;
     private javax.swing.JMenuItem mnuItemProveedor;
     private javax.swing.JMenuItem mnuItemRol;
-    private javax.swing.JMenu mnuItemSalir;
     private javax.swing.JMenuItem mnuItemUsuario;
     private javax.swing.JMenuItem mnuItemVenta;
+    private javax.swing.JMenu mnuSalir;
     private javax.swing.JMenu mnuVentas;
     private javax.swing.JDesktopPane principal;
     // End of variables declaration//GEN-END:variables

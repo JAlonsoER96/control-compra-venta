@@ -53,7 +53,29 @@ public class UsuarioDAO implements CrudPaginado<Usuario> {
         }
         return registros;
     }
-
+    //Login
+    public Usuario login(String email, String clave) {
+        Usuario user = null;
+        try {
+            ps = CON.conectar().prepareStatement("select u.idusuario, r.idrol,r.nombre as rol, u.nombre as usuario, u.email,u.activo from usuario as u inner join rol as r on u.rol_id = r.idrol "+
+                    "where u.email = ? and u.clave=?");
+            ps.setString(1, email);
+            ps.setString(2,clave);
+            rs = ps.executeQuery();
+            if (rs.first()) {
+                user = new Usuario(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getBoolean(6));
+            }
+            ps.close();
+            rs.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally {
+            ps = null;
+            rs = null;
+            CON.desconectar();
+        }
+        return user;
+    }
     @Override
     public boolean insert(Usuario obj) {
         resp = false;

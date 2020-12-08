@@ -70,6 +70,27 @@ public class ControlUsuario {
         }
         return this.model;
     }
+    /*
+    *@a
+    */
+    public String login(String email, String clave){
+        String respuesta = "0";
+        Usuario user = this.DATOS.login(email, this.encriptar(clave));
+        System.out.println(user);
+        if (user != null) {
+            if (user.isActivo()) {
+                respuesta = "1";
+                VariablesLogin.userID = user.getIdusuario();
+                VariablesLogin.rolId = user.getRol_id();
+                VariablesLogin.nombreRol = user.getNombreRol();
+                VariablesLogin.nombreUser = user.getNombre();
+                VariablesLogin.emailUser = user.getEmail();
+            }else{
+                respuesta = "2";
+            }
+        }
+        return respuesta;
+    }
 
     public DefaultComboBoxModel select() {
         DefaultComboBoxModel items = new DefaultComboBoxModel();
