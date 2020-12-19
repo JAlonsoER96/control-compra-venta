@@ -51,7 +51,7 @@ public class FrmLogin extends javax.swing.JFrame {
         txtEmail.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        jLabel2.setText("Email:");
+        jLabel2.setText("Contraseña:");
 
         txtPswd.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
 

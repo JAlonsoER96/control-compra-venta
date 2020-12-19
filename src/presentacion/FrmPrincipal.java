@@ -261,7 +261,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuItemUsuarioActionPerformed
 
     private void mnuItemIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemIngresoActionPerformed
-        // TODO add your handling code here:
+        FrmIngreso frmi = new FrmIngreso(this);
+        principal.add(frmi);
+        frmi.setVisible(true);
     }//GEN-LAST:event_mnuItemIngresoActionPerformed
 
     private void mnuItemClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemClienteActionPerformed

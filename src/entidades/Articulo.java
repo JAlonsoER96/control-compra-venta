@@ -39,6 +39,16 @@ public class Articulo {
         this.imagen = imagen;
         this.activo = activo;
     }
+    //
+
+    public Articulo(int idarticulo, String codigo, String nombre, double precio_venta, int stock) {
+        this.idarticulo = idarticulo;
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.precio_venta = precio_venta;
+        this.stock = stock;
+    }
+    
     //Métodos get an set
 
     public int getIdarticulo() {

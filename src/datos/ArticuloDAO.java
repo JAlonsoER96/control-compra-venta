@@ -52,7 +52,26 @@ public class ArticuloDAO implements CrudPaginado<Articulo> {
         }
         return registros;
     }
-
+    public Articulo obtenerPorCod(String codigo){
+        Articulo art = null;
+        try {
+            ps = CON.conectar().prepareStatement("select idarticulo,codigo,nombre,precio_venta,stock from articulo where codigo= ?");
+            ps.setString(1,  codigo);
+            rs = ps.executeQuery();
+            if(rs.first()){
+                art = new Articulo(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getInt(5));
+            }
+            ps.close();
+            rs.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally {
+            ps = null;
+            rs = null;
+            CON.desconectar();
+        }
+        return art;
+    }
     @Override
     public boolean insert(Articulo obj) {
         resp = false;
