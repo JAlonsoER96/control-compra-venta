@@ -68,6 +68,38 @@ public class ControlArticulo {
         }
         return this.model;
     }
+    public DefaultTableModel listarParaVenta(String texto, int totalPerPagina, int numPagina) {
+        List<Articulo> lista = new ArrayList();
+        lista.addAll(DATOS.listForSale(texto, totalPerPagina, numPagina));
+        //Encabezados de tabla
+        String[] titulos = {"ID", "Categoría Id", "Categoría", "Codígo", "Nombre", "Precio venta", "Stock", "Descripción", "Imagen", "Estado"};
+        //Instanción modelo tabla
+        this.model = new DefaultTableModel(null, titulos);
+        String estado;
+        String[] registro = new String[10];
+        this.totalMostrados = 0;
+        for (Articulo item : lista) {
+            if (item.isActivo()) {
+                estado = "Activo";
+            } else {
+                estado = "Inactivo";
+            }
+            registro[0] = Integer.toString(item.getIdarticulo());
+            registro[1] = Integer.toString(item.getCategoria_id());
+            registro[2] = item.getNombreCAtegoria();
+            registro[3] = item.getCodigo();
+            registro[4] = item.getNombre();
+            registro[5] = Double.toString(item.getPrecio_venta());
+            registro[6] = Integer.toString(item.getStock());
+            registro[7] = item.getDescripcion();
+            registro[8] = item.getImagen();
+            registro[9] = estado;
+            //Agrega el registro al modelo de tabla
+            this.model.addRow(registro);
+            this.totalMostrados += 1;
+        }
+        return this.model;
+    }
     public DefaultComboBoxModel select(){
         DefaultComboBoxModel items = new DefaultComboBoxModel();
         List<Categoria> lista = new ArrayList();

@@ -21,7 +21,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         initComponents();
         setExtendedState(MAXIMIZED_BOTH);
         setTitle("Control Compra - Venta");
-        this.cargarOpciones();
+        //this.cargarOpciones();
     }
 
     public void cargarOpciones() {
@@ -229,7 +229,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuItemProveedorActionPerformed
 
     private void mnuItemVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemVentaActionPerformed
-        // TODO add your handling code here:
+       FrmVenta frmv = new FrmVenta(this);
+       principal.add(frmv);
+       frmv.setVisible(true);
     }//GEN-LAST:event_mnuItemVentaActionPerformed
 
     private void mnuItemRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemRolActionPerformed

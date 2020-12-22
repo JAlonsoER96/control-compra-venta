@@ -52,10 +52,53 @@ public class ArticuloDAO implements CrudPaginado<Articulo> {
         }
         return registros;
     }
+    public List<Articulo> listForSale(String texto, int totalPerPagina,int numPagina) {
+        List<Articulo> registros = new ArrayList<>();
+        try {
+            ps = CON.conectar().prepareStatement("select a.*, c.nombre as categoria from articulo as a inner join categoria as c on a.categoria_id = c.idcategoria "+
+                    "where a.nombre LIKE ? and a.stock>0 and a.activo = true order by a.idarticulo asc limit ? , ?");
+            ps.setString(1, "%" + texto + "%");
+            ps.setInt(2, (numPagina-1)*totalPerPagina);
+            ps.setInt(3, totalPerPagina);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                registros.add(new Articulo(rs.getInt(1),rs.getInt(2),rs.getString(10),rs.getString(3),rs.getString(4),rs.getDouble(5),rs.getInt(6),rs.getString(7),rs.getString(8),rs.getBoolean(9)));
+            }
+            ps.close();
+            rs.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally {
+            ps = null;
+            rs = null;
+            CON.desconectar();
+        }
+        return registros;
+    }
     public Articulo obtenerPorCod(String codigo){
         Articulo art = null;
         try {
             ps = CON.conectar().prepareStatement("select idarticulo,codigo,nombre,precio_venta,stock from articulo where codigo= ?");
+            ps.setString(1,  codigo);
+            rs = ps.executeQuery();
+            if(rs.first()){
+                art = new Articulo(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getInt(5));
+            }
+            ps.close();
+            rs.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally {
+            ps = null;
+            rs = null;
+            CON.desconectar();
+        }
+        return art;
+    }
+    public Articulo obtenerPorCodVenta(String codigo){
+        Articulo art = null;
+        try {
+            ps = CON.conectar().prepareStatement("select idarticulo,codigo,nombre,precio_venta,stock from articulo where codigo= ? and stock>0 and activo = true");
             ps.setString(1,  codigo);
             rs = ps.executeQuery();
             if(rs.first()){
