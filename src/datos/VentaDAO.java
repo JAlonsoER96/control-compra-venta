@@ -258,5 +258,26 @@ public class VentaDAO implements CrudVenta<Venta, DetalleVenta> {
         }
         return numComprobante;
     }
+    public List<Venta> consultaFechas(Date fechaInicio, Date fechaFin) {
+        List<Venta> registros=new ArrayList();
+        try {
+            ps=CON.conectar().prepareStatement("SELECT v.idventa,v.usuario_id,u.nombre AS usuario_nombre,v.persona_id,p.nombre AS persona_nombre,v.tipo_comprobante,v.serie_comprobante,v.num_comprobante,v.fecha,v.impuesto,v.total,v.estado FROM venta v INNER JOIN persona p ON v.persona_id=p.idpersona INNER JOIN usuario u ON v.usuario_id=u.idusuario WHERE v.fecha>=? AND v.fecha<=?");
+            ps.setDate(1,fechaInicio);            
+            ps.setDate(2,fechaFin);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                registros.add(new Venta(rs.getInt(1),rs.getInt(4),rs.getInt(2),rs.getString(5),rs.getString(3),rs.getString(6),rs.getString(7),rs.getString(8),rs.getDate(9),rs.getDouble(10),rs.getDouble(11),rs.getString(12)));
+            }
+            ps.close();
+            rs.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally{
+            ps=null;
+            rs=null;
+            CON.desconectar();
+        }
+        return registros;
+    }
 
 }

@@ -157,6 +157,8 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         comboPagina = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         comboTotalPorPagina = new javax.swing.JComboBox<>();
+        btnReport = new javax.swing.JButton();
+        btnBarcode = new javax.swing.JButton();
         panelManteCat = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNewArtName = new javax.swing.JTextField();
@@ -276,6 +278,22 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
             }
         });
 
+        btnReport.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnReport.setText("Generar reporte");
+        btnReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportActionPerformed(evt);
+            }
+        });
+
+        btnBarcode.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnBarcode.setText("Generar BarCode");
+        btnBarcode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBarcodeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelListadoCatLayout = new javax.swing.GroupLayout(panelListadoCat);
         panelListadoCat.setLayout(panelListadoCatLayout);
         panelListadoCatLayout.setHorizontalGroup(
@@ -283,19 +301,9 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
             .addGroup(panelListadoCatLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(panelListadoCatLayout.createSequentialGroup()
                         .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelListadoCatLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtCatNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnBuscar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnNuevo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnEditar))
+                            .addComponent(jScrollPane1)
                             .addGroup(panelListadoCatLayout.createSequentialGroup()
                                 .addGap(40, 40, 40)
                                 .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -309,10 +317,25 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
                                         .addGap(68, 68, 68)
                                         .addComponent(jLabel11)
                                         .addGap(18, 18, 18)
-                                        .addComponent(comboTotalPorPagina, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 651, Short.MAX_VALUE)
-                        .addComponent(lblTotalRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                                        .addComponent(comboTotalPorPagina, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 914, Short.MAX_VALUE)
+                                .addComponent(lblTotalRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())
+                    .addGroup(panelListadoCatLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCatNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnBuscar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnNuevo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEditar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnReport)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBarcode)
+                        .addGap(326, 326, 326))))
         );
         panelListadoCatLayout.setVerticalGroup(
             panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,7 +346,9 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
                     .addComponent(txtCatNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar)
                     .addComponent(btnNuevo)
-                    .addComponent(btnEditar))
+                    .addComponent(btnEditar)
+                    .addComponent(btnReport)
+                    .addComponent(btnBarcode))
                 .addGap(28, 28, 28)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -334,7 +359,7 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
                         .addComponent(jLabel11)
                         .addComponent(comboTotalPorPagina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblTotalRegistros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                 .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnActivar)
                     .addComponent(btnDesactivar))
@@ -716,10 +741,19 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
         this.paginar();
     }//GEN-LAST:event_comboTotalPorPaginaActionPerformed
 
+    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
+       CONTROL.reporte();
+    }//GEN-LAST:event_btnReportActionPerformed
+
+    private void btnBarcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBarcodeActionPerformed
+        CONTROL.reporteBarras();
+    }//GEN-LAST:event_btnBarcodeActionPerformed
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActivar;
+    private javax.swing.JButton btnBarcode;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCargar;
@@ -727,6 +761,7 @@ public class FrmArticulo extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnReport;
     private javax.swing.JComboBox<String> comboCat;
     private javax.swing.JComboBox<String> comboPagina;
     private javax.swing.JComboBox<String> comboTotalPorPagina;

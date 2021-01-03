@@ -118,6 +118,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Consulta Ingresos"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuItemCIActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuItemCV">
               <Properties>
@@ -126,6 +129,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Consulta Ventas"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuItemCVActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

@@ -21,7 +21,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         initComponents();
         setExtendedState(MAXIMIZED_BOTH);
         setTitle("Control Compra - Venta");
-        //this.cargarOpciones();
+        this.cargarOpciones();
     }
 
     public void cargarOpciones() {
@@ -154,10 +154,20 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
             mnuItemCI.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.ALT_MASK));
             mnuItemCI.setText("Consulta Ingresos");
+            mnuItemCI.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    mnuItemCIActionPerformed(evt);
+                }
+            });
             mnuConsulta.add(mnuItemCI);
 
             mnuItemCV.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.ALT_MASK));
             mnuItemCV.setText("Consulta Ventas");
+            mnuItemCV.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    mnuItemCVActionPerformed(evt);
+                }
+            });
             mnuConsulta.add(mnuItemCV);
 
             escritorio.add(mnuConsulta);
@@ -279,6 +289,18 @@ public class FrmPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_mnuSalirMouseClicked
+
+    private void mnuItemCVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemCVActionPerformed
+        FrmVentasFechas frm = new FrmVentasFechas();
+        principal.add(frm);
+        frm.setVisible(true);
+    }//GEN-LAST:event_mnuItemCVActionPerformed
+
+    private void mnuItemCIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItemCIActionPerformed
+        FrmIngresosFechas frm = new FrmIngresosFechas();
+        principal.add(frm);
+        frm.setVisible(true);
+    }//GEN-LAST:event_mnuItemCIActionPerformed
 
     /**
      * @param args the command line arguments

@@ -212,6 +212,7 @@ public class FrmIngreso extends javax.swing.JInternalFrame {
         jLabel11 = new javax.swing.JLabel();
         comboTotalPorPagina = new javax.swing.JComboBox<>();
         btnDetalles = new javax.swing.JButton();
+        btnReporte = new javax.swing.JButton();
         panelManteCat = new javax.swing.JPanel();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -331,6 +332,14 @@ public class FrmIngreso extends javax.swing.JInternalFrame {
             }
         });
 
+        btnReporte.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnReporte.setText("Reporte ingreso");
+        btnReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelListadoCatLayout = new javax.swing.GroupLayout(panelListadoCat);
         panelListadoCat.setLayout(panelListadoCatLayout);
         panelListadoCatLayout.setHorizontalGroup(
@@ -363,7 +372,10 @@ public class FrmIngreso extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 450, Short.MAX_VALUE)
                         .addGroup(panelListadoCatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblTotalRegistros, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnDetalles, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelListadoCatLayout.createSequentialGroup()
+                                .addComponent(btnReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnDetalles)))))
                 .addContainerGap())
         );
         panelListadoCatLayout.setVerticalGroup(
@@ -375,7 +387,8 @@ public class FrmIngreso extends javax.swing.JInternalFrame {
                     .addComponent(txtCatNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar)
                     .addComponent(btnNuevo)
-                    .addComponent(btnDetalles))
+                    .addComponent(btnDetalles)
+                    .addComponent(btnReporte))
                 .addGap(28, 28, 28)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -387,7 +400,7 @@ public class FrmIngreso extends javax.swing.JInternalFrame {
                         .addComponent(comboTotalPorPagina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnDesactivar))
                     .addComponent(lblTotalRegistros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
 
         panelNuevo.addTab("Listado", panelListadoCat);
@@ -814,6 +827,15 @@ public class FrmIngreso extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnDetallesActionPerformed
 
+    private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
+        if (tablaListIngreso.getSelectedRowCount() == 1) {
+            String id = String.valueOf(tablaListIngreso.getValueAt(tablaListIngreso.getSelectedRow(), 0));
+            this.CONTROL.reporte(id);
+        } else {
+            this.errorMesagge("Seleccione una venta");
+        }
+    }//GEN-LAST:event_btnReporteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -823,6 +845,7 @@ public class FrmIngreso extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnDetalles;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnReporte;
     private javax.swing.JButton btnSelProv;
     private javax.swing.JButton btnVerArt;
     private javax.swing.JComboBox<String> comboCompro;

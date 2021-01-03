@@ -6,6 +6,7 @@
 package negocio;
 //Imports
 
+import database.Conexion;
 import datos.ArticuloDAO;
 import datos.CategoriaDAO;
 import java.util.ArrayList;
@@ -13,7 +14,12 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import entidades.Articulo;
 import entidades.Categoria;
+import java.io.File;
+import java.util.*;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -191,5 +197,35 @@ public class ControlArticulo {
 
     public int showAll() {
         return this.totalMostrados;
+    }
+    public void reporte(){
+        Map p = new HashMap();
+        JasperReport report;
+        JasperPrint print;
+        Conexion cnn = Conexion.getInstancia();
+        try {
+            report = JasperCompileManager.compileReport(new File("").getAbsolutePath()+"/src/reportes/rptarticulos.jrxml");
+            print = JasperFillManager.fillReport(report, p,cnn.conectar());
+            JasperViewer view = new JasperViewer(print,false);
+            view.setTitle("Reporte artículos");
+            view.setVisible(true);
+        } catch (JRException e) {
+            JOptionPane.showMessageDialog(null, e,"Error",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    public void reporteBarras(){
+        Map p = new HashMap();
+        JasperReport report;
+        JasperPrint print;
+        Conexion cnn = Conexion.getInstancia();
+        try {
+            report = JasperCompileManager.compileReport(new File("").getAbsolutePath()+"/src/reportes/rptArticulosBarras.jrxml");
+            print = JasperFillManager.fillReport(report, p,cnn.conectar());
+            JasperViewer view = new JasperViewer(print,false);
+            view.setTitle("Reporte artículos");
+            view.setVisible(true);
+        } catch (JRException e) {
+            JOptionPane.showMessageDialog(null, e,"Error",JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

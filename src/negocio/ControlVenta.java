@@ -6,6 +6,7 @@
 package negocio;
 //Imports
 
+import database.Conexion;
 import datos.ArticuloDAO;
 import datos.VentaDAO;
 import entidades.Articulo;
@@ -15,8 +16,19 @@ import javax.swing.table.DefaultTableModel;
 import entidades.Categoria;
 import entidades.DetalleVenta;
 import entidades.Venta;
+import java.io.File;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -98,6 +110,7 @@ public class ControlVenta {
         Articulo art = DATOS_ART.obtenerPorCodVenta(codigo);
         return art;
     }
+
     public Articulo obtenerPorCodVenta(String codigo) {
         Articulo artV = DATOS_ART.obtenerPorCodVenta(codigo);
         return artV;
@@ -163,12 +176,62 @@ public class ControlVenta {
     public int showAll() {
         return this.totalMostrados;
     }
+
     //Obtiene el ultimo número de serie emitido
     public String ultimoSerie(String tipoComprobante) {
         return this.DATOS.ultimoSerie(tipoComprobante);
     }
+
     //Obtiene el ultimo número de comprobnte emitido
-    public String ultimoNumero(String tipoComprobante,String serieComprobante) {
+    public String ultimoNumero(String tipoComprobante, String serieComprobante) {
         return this.DATOS.ultimoNumero(tipoComprobante, serieComprobante);
+    }
+
+    public void reporte(String idventa) {
+        Map p = new HashMap();
+        p.put("idventa", idventa);
+        JasperReport report;
+        JasperPrint print;
+        Conexion cnn = Conexion.getInstancia();
+        try {
+            report = JasperCompileManager.compileReport(new File("").getAbsolutePath() + "/src/reportes/rptComprobant.jrxml");
+            print = JasperFillManager.fillReport(report, p, cnn.conectar());
+            JasperViewer view = new JasperViewer(print, false);
+            view.setTitle("Reporte venta");
+            view.setVisible(true);
+        } catch (JRException e) {
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public DefaultTableModel consultaFechas(Date fechaInicio, Date fechaFin) {
+        List<Venta> lista = new ArrayList();
+        lista.addAll(DATOS.consultaFechas(fechaInicio, fechaFin));
+
+        String[] titulos = {"Id", "Usuario ID", "Usuario", "Cliente ID", "Cliente", "Tipo Comprobante", "Serie", "Número", "Fecha", "Impuesto", "Total", "Estado"};
+        this.model = new DefaultTableModel(null, titulos);
+
+        String[] registro = new String[12];
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        this.totalMostrados = 0;
+        for (Venta item : lista) {
+            registro[0] = Integer.toString(item.getIdVenta());
+            registro[1] = Integer.toString(item.getIdUsuario());
+            registro[2] = item.getNombreUsuario();
+            registro[3] = Integer.toString(item.getIdPersona());
+            registro[4] = item.getNombrePersona();
+            registro[5] = item.getTipoComprobante();
+            registro[6] = item.getSerieComprobante();
+            registro[7] = item.getNumComprobante();
+            registro[8] = sdf.format(item.getFecha());
+            registro[9] = Double.toString(item.getImpuesto());
+            registro[10] = Double.toString(item.getTotal());
+            registro[11] = item.getEstado();
+
+            this.model.addRow(registro);
+            this.totalMostrados = this.totalMostrados + 1;
+        }
+        return this.model;
     }
 }
